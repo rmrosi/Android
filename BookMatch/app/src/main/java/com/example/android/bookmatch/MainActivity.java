@@ -5,9 +5,9 @@
             import android.graphics.Canvas;
             import android.graphics.Matrix;
             import android.os.Bundle;
-            import android.os.Handler;
             import android.support.v7.app.AppCompatActivity;
             import android.view.View;
+            import android.view.ViewGroup;
             import android.widget.ImageButton;
             import android.widget.ImageView;
 
@@ -23,11 +23,15 @@
 
                 private Bitmap bookMatch1,bookMatch2, bookMatch3, bookMatch4;
                 ImageButton imagebtn1, imagebtn2, imagebtn3, imagebtn4, columnbtn, gridbtn;
+                View linearLayout;
 
+                private int height;
+                private int width;
                 @Override
                 protected void onCreate(Bundle savedInstanceState) {
                     super.onCreate(savedInstanceState);
                     setContentView(R.layout.activity_main);
+
                     imagebtn1 = (ImageButton) findViewById(R.id.button1);
                     imagebtn2 = (ImageButton) findViewById(R.id.button2);
                     imagebtn3 = (ImageButton) findViewById(R.id.button3);
@@ -35,15 +39,67 @@
                     columnbtn = (ImageButton) findViewById(R.id.button_column);
                     gridbtn = (ImageButton) findViewById(R.id.button_grid_2);
 
+
                     imagebtn1.setOnClickListener(this);
                     imagebtn2.setOnClickListener(this);
                     imagebtn3.setOnClickListener(this);
                     imagebtn4.setOnClickListener(this);
                     columnbtn.setOnClickListener(this);
                     gridbtn.setOnClickListener(this);
-                }
 
-                private final Handler mHandler = new Handler();
+                    // Get width and height of LinearLayout BookMatch View
+                    linearLayout= findViewById(R.id.view_linear_layout);
+
+                    linearLayout.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ViewGroup.MarginLayoutParams paramsView = (ViewGroup.MarginLayoutParams)
+                                    linearLayout.getLayoutParams();
+                            ViewGroup.MarginLayoutParams paramsImage = (ViewGroup
+                                    .MarginLayoutParams)
+                                    imagebtn1.getLayoutParams();
+                            height = linearLayout.getHeight(); //height is ready
+                            width = linearLayout.getWidth();
+
+                            // Calculate the size of each four ImageView to distribute them in equal size
+                            // along the LinearLayout
+                            height = height - paramsView.topMargin - paramsView.bottomMargin;
+                            width = (width - paramsView.leftMargin - paramsView.rightMargin
+                                    - 6*paramsImage.leftMargin)/4;
+                            // Choice between height or width the size of square ImageView
+                            if(height < width)
+                            {
+                                imagebtn1.getLayoutParams().width = height;
+                                imagebtn1.getLayoutParams().height = height;
+
+                                imagebtn2.getLayoutParams().width = height;
+                                imagebtn2.getLayoutParams().height = height;
+
+                                imagebtn3.getLayoutParams().width = height;
+                                imagebtn3.getLayoutParams().height = height;
+
+                                imagebtn4.getLayoutParams().width = height;
+                                imagebtn4.getLayoutParams().height = height;
+                            }
+                            else
+                            {
+                                imagebtn1.getLayoutParams().width = width;
+                                imagebtn1.getLayoutParams().height = width;
+
+                                imagebtn2.getLayoutParams().width = width;
+                                imagebtn2.getLayoutParams().height = width;
+
+                                imagebtn3.getLayoutParams().width = width;
+                                imagebtn3.getLayoutParams().height = width;
+
+                                imagebtn4.getLayoutParams().width = width;
+                                imagebtn4.getLayoutParams().height = width;
+                            }
+
+                        }
+                    });
+
+                }
 
                 // Set ImageView from one of the generated bookmatch
                 @Override
@@ -76,15 +132,11 @@
                     }
                 }
                 /**
-                 * Called when the bookmatch_image_view button is pressed.
+                 * Called when the bookmatch_column construction image_view button is pressed.
                  */
                 public void bookMatchColumn(View view) {
                     Bitmap bmpUnion, bmpFlip, bmp1, bmp2;
-
-                    //ImageButton
-                            //columnButton.setSelected(true);
-                    //gridButton.setClickable(true);
-                    // TODO: Find a reference to the ImageView in the layout. Create the bookmatch 1 and set ImageView and button1.
+                   // TODO: Find a reference to the ImageView in the layout. Create the bookmatch 1 and set ImageView and button1.
                     ImageView plateImageView = (ImageView) findViewById(R.id.android_bookmatch_image_view);
                     plateImageView.setImageResource(R.drawable.plate);
                     bmp1 = BitmapFactory.decodeResource(getResources(),R.drawable.plate);
@@ -144,7 +196,7 @@
                 }
 
                 /**
-                 * Called when the bookmatch_image_view button is pressed.
+                 * Called when the bookmatch_grid construction image_view button is pressed.
                  */
                 public void bookMatchGrid2(View view) {
                     Bitmap bmpUnion, bmpFlip, bmp1, bmp2;
@@ -231,6 +283,7 @@
                     imgButton4.setImageBitmap(resizeBmp(imgButton4,bookMatch4));
                 }
 
+                // Changes the size of the bitmap
                 public Bitmap resizeBmp(View someView, Bitmap c){
                     Bitmap cs = null;
 

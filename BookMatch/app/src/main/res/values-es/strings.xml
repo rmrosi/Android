@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BookMatch</string>
+    <string name="forma_de_construcao">Forma de construcción:</string>
+</resources>
